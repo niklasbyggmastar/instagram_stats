@@ -6,22 +6,26 @@ import plotly.offline as py
 import plotly.graph_objs as go
 import numpy
 import webbrowser
+from config import Config
 
-plotly.tools.set_credentials_file(username='niklasb', api_key='va6holdjkGSkbgRuQoFa')
+# TODO: Hide credentials
+conf = Config()
 
-client_id = "f6b799c1f737465baaf19d6573e42eec"
+plotly.tools.set_credentials_file(username=conf.USERNAME, api_key=conf.API_KEY)
+
+client_id = conf.CLIENT_ID
 redirect_uri = "http://localhost:8000"
 authorize_url = "https://api.instagram.com/oauth/authorize/?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&response_type=token"
 #webbrowser.open(authorize_url)
 
-access_token = "466728135.f6b799c.dacaaab1e030426c9d19ff2bb2bc62a5"
+access_token = conf.ACCESS_TOKEN
 api = "https://api.instagram.com/v1/users/self/?access_token=" +  access_token
 
 username = ""
 followers = 0
 following = 0
 
-stats_file = "stats.json"
+stats_file = conf.HOST + "stats.json"
 previous_data = {}
 
 
@@ -88,6 +92,7 @@ def read_stats_file():
         f.close()
         return data
 
+
 def create_graph():
     history = previous_data['history']
     x_axis = []
@@ -111,7 +116,7 @@ def create_graph():
         name = "Following"
     )
 
-    py.plot([followers_line, followings_line], filename='graph.html')
+    py.plot([followers_line, followings_line], filename=conf.HOST + 'graph.html', auto_open=False)
 
 
 #-------------------------
